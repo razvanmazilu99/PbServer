@@ -1,0 +1,38 @@
+Problem 2
+
+3 APIs
+
+1st API: GET
+
+/v1/getmyvehicle?type="car"
+-> create a car and pass it back to postman
+
+Car
+{
+    Name: BMW
+    Type: Car
+    Model: 2020
+}
+Bus
+Bike
+
+2nd API: POST
+
+/v1/postmyvehicle
+
+Body: 
+{
+    Name: ""
+    Type: ""
+    Model: ""
+}
+
+3rd API: POST
+
+/v1/canDrive
+
+{
+    Name:
+    Type:
+    Model:
+}
