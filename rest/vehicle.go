@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"problem/entity"
+	"strconv"
 )
 
 func GetMyVehicle(rw http.ResponseWriter, r *http.Request) {
@@ -72,4 +73,57 @@ func PostMyVehicle(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Write(bodyBytes)
+}
+
+func PostCanDrive(rw http.ResponseWriter, r *http.Request) {
+
+	reqBody := r.Body
+
+	bodyBytes, err := ioutil.ReadAll(reqBody)
+
+	if err != nil {
+		rw.Write([]byte("Internal issue 1"))
+		return
+	}
+
+	var vehicle map[string]interface{}
+	err = json.Unmarshal(bodyBytes, &vehicle)
+
+	if err != nil {
+		rw.Write([]byte("Internal issue 2"))
+		return
+	}
+
+	vehicleType, ok := vehicle["Type"].(string) //schimbam aici tipul in string ca sa nu punem .(type) la switch
+
+	if !ok {
+		rw.Write([]byte("Internal issue 3"))
+		return
+	}
+
+	var vehicle1 entity.Vehicle
+
+	switch vehicleType {
+	case "car":
+		vehicle1 = entity.Car{Name: "BMW", Type: "Car", Model: 2020}
+	case "bike":
+		vehicle1 = entity.Bike{Name: "BMX", Type: "Bike", Model: 2009}
+	case "bus":
+		vehicle1 = entity.Bus{Name: "STPT", Type: "Bus", Model: 2000}
+	default:
+		rw.Write([]byte("Vehicle not known"))
+		return
+	}
+
+	value := vehicle1.CanDrive()
+	valueS := strconv.FormatBool(value)
+
+	if value {
+		rw.Write([]byte(valueS))
+		rw.Write(bodyBytes)
+	} else {
+		rw.Write([]byte(valueS))
+		rw.Write(bodyBytes)
+	}
+
 }
